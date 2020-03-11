@@ -30,12 +30,18 @@ cp ./resources/apps/vim/.vimrc ~/.vimrc
 
 curl https://sdk.cloud.google.com | zsh
 # Run this to configure: gcloud init
-pip3 install awscli --upgrade --user
+# pip3 install awscli --upgrade --user
 
 # Google Cloud Platform: Cloud SQL Proxy
 curl -o cloud_sql_proxy https://dl.google.com/cloudsql/cloud_sql_proxy.darwin.amd64
 chmod +x cloud_sql_proxy
 mv cloud_sql_proxy /usr/local/bin/cloud_sql_proxy
+
+
+# Amazon CLI
+curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
+sudo installer -pkg AWSCLIV2.pkg -target /
+
 
 
 ###############################################################################
@@ -151,11 +157,10 @@ brew cask install adobe-creative-cloud
 ###############################################################################
 # IMAGE & VIDEO PROCESSING                                                    #
 ###############################################################################
-
-brew install imagemagick --with-librsvg --with-opencl --with-webp
+brew install imagemagick
 
 brew install libvpx
-brew install ffmpeg --with-libass --with-libvorbis --with-libvpx --with-x265 --with-ffplay
+brew install ffmpeg
 brew install youtube-dl
 
 npm install -g youtube-dl-interactive
@@ -166,7 +171,7 @@ npm install -g youtube-dl-interactive
 
 npm install -g react-native-cli
 
-brew install yarn --without-node
+brew install yarn
 echo "# Yarn" >> ~/.bash_profile
 echo 'export PATH="$HOME/.yarn/bin:$PATH"' >> ~/.bash_profile
 source ~/.bash_profile
@@ -297,6 +302,9 @@ brew cask install transmit4
 
 brew cask install handbrake
 
+brew cask install setapp
+brew cask install airmail
+brew cask install fantastical
 
 brew cask install imagealpha
 brew cask install imageoptim
@@ -304,6 +312,9 @@ brew cask install colorpicker-skalacolor
 
 brew cask install steam
 brew cask install epic-games
+
+brew cask install aws-vault
+brew cask install hyper
 
 
 brew cask install postman
