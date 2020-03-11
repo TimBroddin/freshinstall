@@ -290,7 +290,7 @@ duti -s org.videolan.vlc public.avi all
 
 brew cask install ngrok
 
-
+brew cask install visual-studio-code
 
 brew cask install tower
 brew cask install transmit4
