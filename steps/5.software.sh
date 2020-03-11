@@ -13,47 +13,7 @@ if [ "$starting_script" != "freshinstall.sh" ]; then
 fi;
 
 
-###############################################################################
-# Sublime Text                                                                #
-###############################################################################
 
-brew cask install sublime-text
-
-# Make sure directories exists
-if [ ! -d "~/Library/Application Support/Sublime Text 3" ]; then
-	mkdir ~/Library/Application\ Support/Sublime\ Text\ 3
-fi;
-if [ ! -d "~/Library/Application Support/Sublime Text 3/Installed Packages" ]; then
-	mkdir ~/Library/Application\ Support/Sublime\ Text\ 3/Installed\ Packages
-fi;
-if [ ! -d "~/Library/Application Support/Sublime Text 3/Packages" ]; then
-	mkdir ~/Library/Application\ Support/Sublime\ Text\ 3/Packages
-fi;
-if [ ! -d "~/Library/Application Support/Sublime Text 3/Packages/User" ]; then
-	mkdir ~/Library/Application\ Support/Sublime\ Text\ 3/Packages/User
-fi;
-
-# Install Package Control
-# @ref https://github.com/joeyhoer/starter/blob/master/apps/sublime-text.sh
-cd ~/Library/Application\ Support/Sublime\ Text\ 3/Installed\ Packages && { curl -sLO https://packagecontrol.io/Package\ Control.sublime-package ; cd -; }
-
-# Install Plugins and Config
-cp -r ./resources/apps/sublime-text/* ~/Library/Application\ Support/Sublime\ Text\ 3/Packages/User/ 2>/dev/null
-
-# Open files by default with sublime using duti
-#
-# Note that duti is preferred over the command below, as that on requires a reboot
-# 	defaults write com.apple.LaunchServices LSHandlers -array-add '{"LSHandlerContentType" = "public.plain-text"; "LSHandlerPreferredVersions" = { "LSHandlerRoleAll" = "-"; }; LSHandlerRoleAll = "com.sublimetext.3";}'
-#
-# Some pointers:
-# - To get identifier of Sublime: /usr/libexec/PlistBuddy -c 'Print CFBundleIdentifier' /Applications/Sublime\ Text.app/Contents/Info.plist
-# - To get UTI of a file: mdls -name kMDItemContentTypeTree /path/to/file.ext
-#
-brew install duti
-duti -s com.sublimetext.3 public.data all # for files like ~/.bash_profile
-duti -s com.sublimetext.3 public.plain-text all
-duti -s com.sublimetext.3 public.script all
-duti -s com.sublimetext.3 net.daringfireball.markdown all
 
 
 ###############################################################################
@@ -63,24 +23,12 @@ duti -s com.sublimetext.3 net.daringfireball.markdown all
 cp ./resources/apps/vim/.vimrc ~/.vimrc
 
 
-###############################################################################
-# git-ftp (for older projects)                                                #
-###############################################################################
-
-sudo chown -R $(whoami):staff /Library/Python/2.7
-curl https://bootstrap.pypa.io/get-pip.py | python
-pip install gitpython
-
-cp ./resources/apps/git-ftp/git-ftp.py ~/git-ftp.py
-echo '# git-ftp' >> ~/.bash_profile
-echo 'alias git-ftp="python ~/git-ftp.py"' >> ~/.bash_profile
-
 
 ###############################################################################
 # CLOUD COMPUTE SHIZZLE                                                       #
 ###############################################################################
 
-curl https://sdk.cloud.google.com | bash
+curl https://sdk.cloud.google.com | zsh
 # Run this to configure: gcloud init
 pip3 install awscli --upgrade --user
 
@@ -94,12 +42,14 @@ mv cloud_sql_proxy /usr/local/bin/cloud_sql_proxy
 # NVM + Node Versions                                                         #
 ###############################################################################
 
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash
-source ~/.bash_profile
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.35.3/install.sh | zsh
+source ~/.zshrc
 
 nvm install 7
 nvm install 9
-nvm use default 9
+nvm install 12
+nvm install node
+nvm use default node
 
 NPM_USER=""
 echo -e "\nWhat's your npm username?"
@@ -128,6 +78,8 @@ curl -sSL https://get.rvm.io | bash -s stable --ruby
 source ~/.profile
 
 
+
+
 ###############################################################################
 # Mac App Store                                                               #
 ###############################################################################
@@ -151,29 +103,16 @@ if [ "$AppleID" != "" ]; then
 	# Sign in
 	mas signin $AppleID
 
-	# Tweetbot + config
-	mas install 557168941 # Tweetbot
-	defaults write com.tapbots.TweetbotMac OpenURLsDirectly -bool true
-
 	# iWork
 	mas install 409203825 # Numbers
 	mas install 409201541 # Pages
 	mas install 409183694 # Keynote
 
 	# Others
-	mas install 494803304 # Wifi Explorer
-	mas install 425424353 # The Unarchiver
-	mas install 404167149 # IP Scanner
-	mas install 402397683 # MindNode Lite
-	mas install 578078659 # ScreenSharingMenulet
+	mas install 587512244 # Kaleidoscope
+	mas install 1482454543 # Twitter
+	mas install 1449412482 # Reeder
 	mas install 803453959 # Slack
-	mas install 1006739057 # NepTunes (Last.fm Scrobbling)
-	mas install 955297617 # CodeRunner 2
-	mas install 1313773050 # Artstudio Pro
-	mas install 824171161 # Affinity Designer
-	mas install 824183456 # Affinity Photo
-	mas install 411643860 # DaisyDisk
-	mas install 1392471092 # NFC Tools for Desktop
 
 fi;
 
@@ -197,6 +136,17 @@ brew cask install google-chrome
 brew cask install google-chrome-canary
 brew cask install safari-technology-preview
 
+###############################################################################
+# iTerm                                                                    #
+###############################################################################
+brew cask install iterm
+
+
+###############################################################################
+# CREATIVE CLOUD                                                              #
+###############################################################################
+
+brew cask install adobe-creative-cloud
 
 ###############################################################################
 # IMAGE & VIDEO PROCESSING                                                    #
@@ -208,16 +158,7 @@ brew install libvpx
 brew install ffmpeg --with-libass --with-libvorbis --with-libvpx --with-x265 --with-ffplay
 brew install youtube-dl
 
-
-###############################################################################
-# VISCOSITY + CONFIGS                                                         #
-###############################################################################
-
-brew cask install viscosity
-curl -s -o ~/Downloads/ovpn_configs.zip -L https://privado.io/apps/ovpn_configs.zip > /dev/null
-
-echo -e "\n\033[93mYou'll need to import the Viscosity configs manually. I've downloadeded them to “~/Downloads/ovpn_configs.zip” for you …\033[0m\n"
-
+npm install -g youtube-dl-interactive
 
 ###############################################################################
 # REACT NATIVE + TOOLS                                                        #
@@ -326,57 +267,6 @@ valet install
 # valet link pma
 # valet secure
 
-###############################################################################
-# Transmission.app + Config                                                   #
-###############################################################################
-
-# Install it
-brew cask install transmission
-
-# Use `~/Downloads/_INCOMING` to store incomplete downloads
-defaults write org.m0k.transmission UseIncompleteDownloadFolder -bool true
-defaults write org.m0k.transmission IncompleteDownloadFolder -string "${HOME}/Downloads/_INCOMING"
-if [ ! -d "${HOME}/Downloads/_INCOMING" ]; then
-	mkdir ${HOME}/Downloads/_INCOMING
-fi;
-
-# Use `~/Downloads/_COMPLETE` to store completed downloads
-defaults write org.m0k.transmission DownloadLocationConstant -bool true
-defaults write org.m0k.transmission DownloadFolder -string "${HOME}/Downloads/_COMPLETE"
-if [ ! -d "${HOME}/Downloads/_COMPLETE" ]; then
-	mkdir ${HOME}/Downloads/_COMPLETE
-fi;
-
-# Autoload torrents from Downloads folder
-defaults write org.m0k.transmission AutoImportDirectory -string "${HOME}/Downloads"
-
-# Don’t prompt for confirmation before downloading
-defaults write org.m0k.transmission DownloadAsk -bool false
-defaults write org.m0k.transmission MagnetOpenAsk -bool false
-
-# Don’t prompt for confirmation before removing non-downloading active transfers
-defaults write org.m0k.transmission CheckRemoveDownloading -bool true
-
-# Trash original torrent files
-defaults write org.m0k.transmission DeleteOriginalTorrent -bool true
-
-# Hide the donate message
-defaults write org.m0k.transmission WarningDonate -bool false
-# Hide the legal disclaimer
-defaults write org.m0k.transmission WarningLegal -bool false
-
-# IP block list.
-# Source: https://giuliomac.wordpress.com/2014/02/19/best-blocklist-for-transmission/
-defaults write org.m0k.transmission BlocklistNew -bool true
-defaults write org.m0k.transmission BlocklistURL -string "http://john.bitsurge.net/public/biglist.p2p.gz"
-defaults write org.m0k.transmission BlocklistAutoUpdate -bool true
-
-# Randomize port on launch
-# defaults write org.m0k.transmission RandomPort -bool true
-
-# Set UploadLimit
-defaults write org.m0k.transmission SpeedLimitUploadLimit -int 10
-defaults write org.m0k.transmission UploadLimit -int 5
 
 ###############################################################################
 # OTHER BREW/CASK THINGS                                                      #
@@ -388,40 +278,26 @@ brew install speedtest-cli
 brew install jq
 
 brew cask install 1password
-brew cask install macpass
 
 brew cask install caffeine
 # brew cask install nosleep
 
 brew cask install day-o
-brew cask install deltawalker
-brew cask install macpar-deluxe
 
 brew cask install vlc
 duti -s org.videolan.vlc public.avi all
 # brew cask install plex-media-server
 
-brew cask install charles
 brew cask install ngrok
 
-# Already installed through mas
-# brew cask install slack
-brew cask install skype
-brew cask install whatsapp
+
 
 brew cask install tower
-brew cask install dropbox
 brew cask install transmit4
 
 brew cask install handbrake
-brew cask install spectacle
 
-brew install mkvtoolnix
-brew cask install makemkv
-brew cask install jubler
-brew cask install flixtools
 
-brew cask install the-archive-browser
 brew cask install imagealpha
 brew cask install imageoptim
 brew cask install colorpicker-skalacolor
@@ -429,24 +305,15 @@ brew cask install colorpicker-skalacolor
 brew cask install steam
 brew cask install epic-games
 
-brew cask install xact
 
 brew cask install postman
 
-# Locking down to this version (no serial for later version)
-brew cask install https://raw.githubusercontent.com/grettir/homebrew-cask/36b240eeec68e993a928395d3afdcef1e32eb592/Casks/screenflow.rb
-
-brew cask install subsurface
-brew cask install quik
-
-brew cask install veracrypt
 
 ###############################################################################
 # Virtual Machines and stuff                                                  #
 ###############################################################################
 
 # Locking down to this version (no serial for later version)
-brew cask install https://raw.githubusercontent.com/caskroom/homebrew-cask/a56c5894cc61d2bf182b7608e94128065af3e64f/Casks/vmware-fusion.rb
 brew cask install docker
 
 ###############################################################################

@@ -125,6 +125,7 @@ fi;
 echo -ne "  - Brew Cask                "
 brew tap caskroom/cask 2>&1 > /dev/null
 brew tap caskroom/versions 2>&1 > /dev/null
+brew tap homebrew/cask-fonts  2>&1 > /dev/null
 
 if [ "$(brew --version 2>&1 | grep "homebrew-cask")" ]; then
 	echo -e "\033[32mOK\033[0m"
@@ -135,6 +136,9 @@ else
 	echo -e " - brew tap caskroom/versions"
 	exit
 fi;
+
+
+
 
 ###############################################################################
 # GIT                                                                         #
@@ -206,6 +210,22 @@ git config --global alias.lg "log --graph --pretty=format:'%Cred%h%Creset -%C(ye
 git config --global alias.hide "update-index --assume-unchanged"
 git config --global alias.unhide "update-index --no-assume-unchanged"
 git config --global alias.squash-all '!f(){ git reset $(git commit-tree HEAD^{tree} -m "${1:-🎉 First commit}");};f'
+
+
+
+###############################################################################
+# ZSH                                                                      #
+###############################################################################
+
+echo -e "\n- Oh my zsh:\n"
+brew cask install font-meslo-for-powerline
+brew cask install font-hack-nerd-font-mono
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install
+source ~/.zshrc
+git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
+
+
 
 echo -e "\033[32mOK\033[0m"
 

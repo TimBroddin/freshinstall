@@ -220,7 +220,7 @@ sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo Hos
 echo -e "- MacBookPro Touch Bar …"
 
 # Always display full control strip (ignoring App Controls)
-defaults write com.apple.touchbar.agent PresentationModeGlobal fullControlStrip
+# defaults write com.apple.touchbar.agent PresentationModeGlobal fullControlStrip
 
 ###############################################################################
 # SSD-specific tweaks                                                         #
@@ -251,10 +251,10 @@ sudo pmset -a hibernatemode 0
 echo -e "- Trackpad, mouse, keyboard, Bluetooth accessories, and input …"
 
 # Trackpad: enable tap to click for this user and for the login screen
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
-defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
-defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
-defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+# defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+# defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
+#defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+# defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
 # Trackpad: enable right click with two fingers
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadRightClick -bool true
@@ -318,10 +318,10 @@ defaults write NSGlobalDomain AppleICUForce12HourTime -bool false
 
 
 # Set Lock Message to show on login screen
-sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText -string "Found me? Shoot a mail to bramus@bram.us to return me. Thanks."
+sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText -string "Found me? Shoot a mail to tim.broddin@vrt.be to return me. Thanks."
 
 # # Disable guest login
-# sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText GuestEnabled -bool false
+sudo defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText GuestEnabled -bool false
 
 # Show language menu in the top right corner of the boot screen
 sudo defaults write /Library/Preferences/com.apple.loginwindow showInputMenu -bool true
@@ -380,7 +380,7 @@ defaults write NSGlobalDomain AppleFontSmoothing -int 1
 echo -e "- Finder …"
 
 # Finder: allow quitting via ⌘ + Q; doing so will also hide desktop icons
-defaults write com.apple.finder QuitMenuItem -bool true
+# defaults write com.apple.finder QuitMenuItem -bool true
 
 # @TOCHECK
 # defaults write com.apple.finder AnimateWindowZoom -bool false
@@ -443,7 +443,7 @@ defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 defaults write com.apple.finder FXPreferredViewStyle -string "clmv"
 
 # Disable the warning before emptying the Trash
-# defaults write com.apple.finder WarnOnEmptyTrash -bool false
+defaults write com.apple.finder WarnOnEmptyTrash -bool false
 
 # Empty Trash securely by default
 defaults write com.apple.finder EmptyTrashSecurely -bool true
@@ -559,7 +559,7 @@ defaults write com.apple.dock mru-spaces -bool false
 # 12: Notification Center
 
 # Top right screen corner → Start screen saver
-defaults write com.apple.dock wvous-tr-corner -int 5
+defaults write com.apple.dock wvous-bl-corner -int 5
 defaults write com.apple.dock wvous-tr-modifier -int 0
 
 
