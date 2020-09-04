@@ -319,6 +319,8 @@ brew cask install hyper
 
 brew cask install postman
 
+brew cask install notion
+
 
 ###############################################################################
 # Virtual Machines and stuff                                                  #
