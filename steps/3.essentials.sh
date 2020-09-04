@@ -123,8 +123,8 @@ fi;
 
 # Brew Cask FTW!
 echo -ne "  - Brew Cask                "
-brew tap caskroom/cask 2>&1 > /dev/null
-brew tap caskroom/versions 2>&1 > /dev/null
+brew tap homebrew/cask 2>&1 > /dev/null
+brew tap homebrew/cask-versions 2>&1 > /dev/null
 brew tap homebrew/cask-fonts  2>&1 > /dev/null
 
 if [ "$(brew --version 2>&1 | grep "homebrew-cask")" ]; then
