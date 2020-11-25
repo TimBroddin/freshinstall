@@ -219,7 +219,7 @@ git config --global alias.squash-all '!f(){ git reset $(git commit-tree HEAD^{tr
 
 echo -e "\n- Oh my zsh:\n"
 brew cask install font-meslo-for-powerline
-brew cask install font-hack-nerd-font-mono
+brew cask install font-hack-nerd-font
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install
 source ~/.zshrc

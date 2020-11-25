@@ -24,24 +24,6 @@ cp ./resources/apps/vim/.vimrc ~/.vimrc
 
 
 
-###############################################################################
-# CLOUD COMPUTE SHIZZLE                                                       #
-###############################################################################
-
-curl https://sdk.cloud.google.com | zsh
-# Run this to configure: gcloud init
-# pip3 install awscli --upgrade --user
-
-# Google Cloud Platform: Cloud SQL Proxy
-curl -o cloud_sql_proxy https://dl.google.com/cloudsql/cloud_sql_proxy.darwin.amd64
-chmod +x cloud_sql_proxy
-mv cloud_sql_proxy /usr/local/bin/cloud_sql_proxy
-
-
-# Amazon CLI
-curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
-sudo installer -pkg AWSCLIV2.pkg -target /
-
 
 
 ###############################################################################
@@ -75,13 +57,6 @@ fi;
 
 npm i -g node-notifier-cli
 
-
-###############################################################################
-# RVM                                                                         #
-###############################################################################
-
-curl -sSL https://get.rvm.io | bash -s stable --ruby
-source ~/.profile
 
 
 
@@ -117,8 +92,9 @@ if [ "$AppleID" != "" ]; then
 	# Others
 	mas install 587512244 # Kaleidoscope
 	mas install 1482454543 # Twitter
-	mas install 1449412482 # Reeder
+	mas install 1529448980 # Reeder
 	mas install 803453959 # Slack
+	mas install 1176895641 # Spark
 
 fi;
 
@@ -190,88 +166,6 @@ brew install --HEAD libimobiledevice
 gem install xcpretty
 
 
-###############################################################################
-# QUICK LOOK PLUGINS                                                          #
-###############################################################################
-
-# https://github.com/sindresorhus/quick-look-plugins
-brew cask install qlcolorcode
-brew cask install qlstephen
-brew cask install qlmarkdown
-brew cask install quicklook-json
-brew cask install qlimagesize
-brew cask install suspicious-package
-brew cask install qlvideo
-
-brew cask install provisionql
-brew cask install quicklookapk
-
-# restart quicklook
-defaults write org.n8gray.QLColorCode extraHLFlags '-l'
-qlmanage -r
-qlmanage -m
-
-
-###############################################################################
-# Composer + MySQL + Valet                                                    #
-###############################################################################
-
-# Composer
-curl -s https://getcomposer.org/installer | php
-sudo mv composer.phar /usr/local/bin/composer
-
-echo "# Composer" >> ~/.bash_profile
-echo 'export PATH="$HOME/.composer/vendor/bin:$PATH"' >> ~/.bash_profile
-source ~/.bash_profile
-
-# Composer Autocomplete
-# brew install bash-completion
-curl -#L https://github.com/bramus/composer-autocomplete/tarball/master | tar -xzv --strip-components 1 --exclude={LICENSE,README.md}
-mv ./composer-autocomplete ~/composer-autocomplete
-echo "" >> ~/.bash_profile
-echo 'if [ -f "$HOME/composer-autocomplete" ] ; then' >> ~/.bash_profile
-echo '    . $HOME/composer-autocomplete' >> ~/.bash_profile
-echo "fi" >> ~/.bash_profile
-source ~/.bash_profile
-
-# PHP Versions
-brew install php
-
-brew services start php
-brew link php
-
-pecl install mcrypt-1.0.1 # mcrypt for PHP > 7.1
-pecl install grpc # needed for google firestore et al
-
-# @note: You might wanna "sudo brew services restart php" after this
-
-# MySQL
-brew install mysql
-brew services start mysql
-
-# Tweak MySQL
-mysqlpassword="root"
-echo -e "\n  What should the root password for MySQL be? (default: $mysqlpassword)"
-echo -ne "  > \033[34m\a"
-read
-echo -e "\033[0m\033[1A"
-[ -n "$REPLY" ] && mysqlpassword=$REPLY
-
-mysql -u root -e "ALTER USER root@localhost IDENTIFIED WITH mysql_native_password BY '$mysqlpassword'; FLUSH PRIVILEGES;"
-cat ./resources/apps/mysql/my.cnf > /usr/local/etc/my.cnf
-brew services restart mysql
-
-# Laravel Valet
-composer global require laravel/valet
-valet install
-
-# If you want PMA available over https://pma.test/, run this:
-# cd ~/repos/misc/
-# composer create-project phpmyadmin/phpmyadmin
-# cd ~/repos/misc/phpmyadmin
-# valet link pma
-# valet secure
-
 
 ###############################################################################
 # OTHER BREW/CASK THINGS                                                      #
@@ -280,11 +174,11 @@ valet install
 brew install tig
 
 brew install speedtest-cli
-brew install jq
+# brew install jq
 
 brew cask install 1password
 
-brew cask install caffeine
+# brew cask install caffeine
 # brew cask install nosleep
 
 brew cask install day-o
@@ -303,7 +197,7 @@ brew cask install transmit4
 brew cask install handbrake
 
 brew cask install setapp
-brew cask install airmail
+# brew cask install airmail
 brew cask install fantastical
 
 brew cask install imagealpha
@@ -329,77 +223,6 @@ brew cask install notion
 # Locking down to this version (no serial for later version)
 brew cask install docker
 
-###############################################################################
-# Android Studio                                                              #
-###############################################################################
-
-# @ref https://gist.github.com/agrcrobles/165ac477a9ee51198f4a870c723cd441
-# @ref https://gist.github.com/spilth/e7385e7f5153f76cca40a192be35f4ba
-
-touch ~/.android/repositories.cfg
-
-# Android Dev Tools
-brew cask install caskroom/versions/java8
-brew install ant
-brew install maven
-brew install gradle
-# brew install qt
-brew cask install android-sdk
-brew cask install android-ndk
-
-# SDK Components
-sdkmanager "platform-tools" "platforms;android-25" "extras;intel;Hardware_Accelerated_Execution_Manager" "build-tools;25.0.3" "system-images;android-25;google_apis_playstore;x86" "emulator"
-# echo y | …
-
-# HAXM
-if [ $(sw_vers -productVersion | cut -d. -f2) -lt 13 ]; then
-	brew cask install intel-haxm
-else
-	echo -e "\n\033[93mCould not install intel-haxm on this OS. It's not supported (yet)\033[0m\n"
-fi;
-
-# ENV Variables
-echo 'export ANT_HOME=/usr/local/opt/ant' >> ~/.bash_profile
-echo 'export MAVEN_HOME=/usr/local/opt/maven' >> ~/.bash_profile
-echo 'export GRADLE_HOME=/usr/local/opt/gradle' >> ~/.bash_profile
-echo 'export ANDROID_HOME=/usr/local/share/android-sdk' >> ~/.bash_profile
-echo 'export ANDROID_SDK_ROOT="$ANDROID_HOME"' >> ~/.bash_profile
-echo 'export ANDROID_AVD_HOME="$HOME/.android/avd"' >> ~/.bash_profile
-echo 'export ANDROID_NDK_HOME=/usr/local/share/android-ndk' >> ~/.bash_profile
-echo 'export INTEL_HAXM_HOME=/usr/local/Caskroom/intel-haxm' >> ~/.bash_profile
-
-echo 'export PATH="$ANT_HOME/bin:$PATH"' >> ~/.bash_profile
-echo 'export PATH="$MAVEN_HOME/bin:$PATH"' >> ~/.bash_profile
-echo 'export PATH="$GRADLE_HOME/bin:$PATH"' >> ~/.bash_profile
-echo 'export PATH="$ANDROID_HOME/tools:$PATH"' >> ~/.bash_profile
-echo 'export PATH="$ANDROID_HOME/platform-tools:$PATH"' >> ~/.bash_profile
-echo 'export PATH="$ANDROID_HOME/build-tools/25.0.3:$PATH"' >> ~/.bash_profile
-# @ref https://www.bram.us/2017/05/12/launching-the-android-emulator-from-the-command-line/
-echo 'export PATH="$ANDROID_HOME/emulator:$PATH"' >> ~/.bash_profile
-
-source ~/.bash_profile
-
-# Android Studio itself
-brew cask install android-studio
-
-# Configure Emulator
-# @ref https://gist.github.com/Tanapruk/b05e97d68a5969b4402650094145e913
-# @ref https://wiki.genexus.com/commwiki/servlet/wiki?14462,Creating+an+Android+Virtual+Device,
-# @ref https://gist.github.com/handstandsam/f20c2fd454d3e3948f428f62d73085df
-echo no | avdmanager create avd --name "Nexus_5X_API_25" --abi "google_apis_playstore/x86" --package "system-images;android-25;google_apis_playstore;x86" --device "Nexus 5X" --sdcard 128M
-
-echo "vm.heapSize=256
-hw.ramSize=1536
-disk.dataPartition.size=2048MB
-hw.gpu.enabled=yes
-hw.gpu.mode=auto
-hw.keyboard=yes
-showDeviceFrame=yes
-skin.dynamic=yes
-skin.name=nexus_5x
-skin.path=$HOME/Library/Android/sdk/skins/nexus_5x" >> ~/.android/avd/Nexus_5X_API_25.avd/config.ini
-
-# Start it via `emulator -avd Nexus_5X_API_25`
 
 ###############################################################################
 # ALL DONE NOW!                                                               #
