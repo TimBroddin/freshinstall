@@ -82,7 +82,7 @@ echo -e "\033[0m\033[1A\n"
 if [ "$AppleID" != "" ]; then
 
 	# Sign in
-	mas signin $AppleID
+	# mas signin $AppleID
 
 	# iWork
 	mas install 409203825 # Numbers
@@ -95,6 +95,8 @@ if [ "$AppleID" != "" ]; then
 	mas install 1529448980 # Reeder
 	mas install 803453959 # Slack
 	mas install 1176895641 # Spark
+	mas install 747648890 # Telegram
+	mas install 1084346074 # Whatsapp
 
 fi;
 
